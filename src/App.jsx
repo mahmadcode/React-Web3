@@ -1,4 +1,4 @@
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount, useDisconnect, useBalance } from "wagmi";
 import "./App.css";
 import { useWeb3Modal } from "@web3modal/react";
 import ShowTime from "./components/ShowTime";
@@ -10,6 +10,9 @@ function App() {
   const { open } = useWeb3Modal();
   const { isConnected, address } = useAccount();
   const { disconnect } = useDisconnect();
+  const { data ,  isLoading } = useBalance({
+    address: address,
+  })
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [backgroundColor, setBackgroundColor] = useState("#242424");
@@ -55,6 +58,8 @@ function App() {
       {isConnected && (
         <div className="card">
           <p className="address">{address}</p>
+          <p>{isLoading && "Loading" } </p>
+          {data && (<p className="address">Balance: {data?.formatted} {data?.symbol}</p>)}
           <button onClick={disconnect}>Disconnect Wallet</button>
         </div>
       )}
